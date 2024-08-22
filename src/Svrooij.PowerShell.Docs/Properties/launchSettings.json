@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Svrooij.PowerShell.Docs": {
+      "commandName": "Project",
+      "commandLineArgs": "D:\\source\\WingetIntune\\src\\Svrooij.WinTuner.CmdLets\\bin\\Debug\\net6.0\\Svrooij.WinTuner.CmdLets.dll "
+    }
+  }
+}
