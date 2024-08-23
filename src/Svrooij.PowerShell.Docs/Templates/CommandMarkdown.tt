@@ -10,10 +10,14 @@ sidebar_position: <# if (Command.Order.HasValue) { #><#= Command.Order.Value #><
 
 # <#= Command.Name #>
 
+<# if (Command.Synopsis is not null) { #>
 <#= Command.Synopsis #>
 
+<# } #>
+<# if (Command.Description is not null) { #>
 <#= Command.Description #>
 
+<# } #>
 ## Syntax
 
 <# foreach (var paramSet in Command.GetParameterSets()) { #>
@@ -38,7 +42,7 @@ sidebar_position: <# if (Command.Order.HasValue) { #><#= Command.Order.Value #><
 <# } #>
 
 <# } #>
-<# if (Command.Examples.Any()) { #>
+<# if (Command.Examples?.Any() == true) { #>
 ## Examples
 <# 
 int exampleIndex = 1;
