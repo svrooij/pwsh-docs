@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace Svrooij.PowerShell.Docs.Models;
 
-public class CommandExample
+public class CommandParameterSet
 {
     public string? Name { get; set; }
+    public List<CommandParameter>? Parameters { get; set; }
     public string? Description { get; set; }
-    public string? Code { get; set; }
+    public bool IsDefault { get; set; }
 }

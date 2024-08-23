@@ -12,6 +12,8 @@ namespace Svrooij.PowerShell.Docs
 
         }
 
+        public List<Command> GetCommands() => commands;
+
         private void LoadCommandsFromDllPath(string dllPath)
         {
             // Load the assembly
@@ -49,7 +51,6 @@ namespace Svrooij.PowerShell.Docs
                 /// <summary>
                 /// <para type="synopsis">Connect to Intune</para>
                 /// <para type="description">A separate command to select the correct authentication provider, you no longer have to provide the auth parameters with each command.</para>
-                /// <para type="link" uri="https://wintuner.app/docs/wintuner-powershell/Connect-WtWinTuner">Documentation</para> 
                 /// </summary>
                 // Try if the summary contains a synopsis and description
                 if (summary != null)
@@ -64,6 +65,7 @@ namespace Svrooij.PowerShell.Docs
                     {
                         command.Description = description.InnerText;
                     }
+                    
 
                     if (string.IsNullOrEmpty(command.Synopsis))
                     {
@@ -76,6 +78,38 @@ namespace Svrooij.PowerShell.Docs
                     command.Description = cmdletTypeDocumentation?.SelectSingleNode("remarks")?.InnerText;
                 }
 
+                var order = cmdletTypeDocumentation?.SelectSingleNode("psOrder");
+                if (order != null)
+                {
+                    command.Order = int.TryParse(order.InnerText, out int result) ? result : null;
+                }
+
+                /// <parameterSet>
+                /// <para type="name">Interactive</para>
+                /// <para type="description">If you're running WinTuner on your local machine, you can use the interactive browser login. This will integrate with the native browser based login screen on Windows and with the default browser on other platforms.</para>
+                /// </parameterSet>
+                /// <parameterSet>
+                /// <para type="name">UseManagedIdentity</para>
+                /// <para type="description">WinTuner supports Managed Identity authentication, this is the recommended way if you run WinTuner in the Azure Environment.</para>
+                /// </parameterSet>
+                var parameterSets = cmdletTypeDocumentation?.SelectNodes("parameterSet");
+                if (parameterSets != null)
+                {
+                    command.ParameterSets = new List<CommandParameterSet>();
+                    for (int i = 0; i < parameterSets.Count; i++)
+                    {
+                        var parameterSet = parameterSets[i];
+                        var name = parameterSet?.SelectSingleNode("para[@type='name']");
+                        var description = parameterSet?.SelectSingleNode("para[@type='description']");
+                        command.ParameterSets.Add(new CommandParameterSet
+                        {
+                            Name = name?.InnerText,
+                            Description = description?.InnerText.Replace("\\r", "\r").Replace("\\n", "\n")
+                        });
+                    }
+                }
+
+
                 /// <example>
                 /// <para type="description">Connect using interactive authentication</para>
                 /// <code>Connect-WtWinTuner -Username "youruser@contoso.com"</code>
@@ -85,6 +119,7 @@ namespace Svrooij.PowerShell.Docs
                 /// <code>Connect-WtWinTuner -UseManagedIdentity</code>
                 /// </example>
                 /// <example>
+                /// <para type="name">Name of the sample</para>
                 /// <para type="description">Connect using default credentials</para>
                 /// <code>az login &amp; Connect-WtWinTuner -UseDefaultCredentials</code>
                 /// </example>
@@ -96,12 +131,14 @@ namespace Svrooij.PowerShell.Docs
                     for (int i = 0; i < examples.Count; i++)
                     {
                         var example = examples[i];
+                        var name = example?.SelectSingleNode("para[@type='name']");
                         var description = example?.SelectSingleNode("para[@type='description']");
                         var code = example?.SelectSingleNode("code");
                         command.Examples[i] = new CommandExample
                         {
-                            Name = description?.InnerText,
-                            Code = code?.InnerText
+                            Name = name?.InnerText,
+                            Description = description?.InnerText.Replace("\\r", "\r").Replace("\\n", "\n"),
+                            Code = code?.InnerText.Replace("\\r", "\r").Replace("\\n", "\n")
                         };
                     }
                 }
@@ -120,9 +157,20 @@ namespace Svrooij.PowerShell.Docs
             return Task.CompletedTask;
         }
 
-        public List<Command> GetCommands()
+        public async Task WriteMarkdownOutput(string outputFolder)
         {
-            return commands;
+            if (!Directory.Exists(outputFolder))
+            {
+                Directory.CreateDirectory(outputFolder);
+            }
+
+            foreach (var command in commands)
+            {
+                var outputFilePath = Path.Combine(outputFolder, $"{command.Name}.md");
+                var template = new Templates.CommandMarkdown(command);
+                await File.WriteAllTextAsync(outputFilePath, template.TransformText());
+            }
         }
+        
     }
 }

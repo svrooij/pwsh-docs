@@ -1,0 +1,57 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+---
+sidebar_position: <# if (Command.Order.HasValue) { #><#= Command.Order.Value #><# } else { #>100<# } #>
+
+---
+
+# <#= Command.Name #>
+
+<#= Command.Synopsis #>
+
+<#= Command.Description #>
+
+## Syntax
+
+<# foreach (var paramSet in Command.GetParameterSets()) { #>
+### <# if (paramSet.Name != null) { #><#= paramSet.Name #><# } else { #>Default parameter set<# } #><# if (paramSet.IsDefault) { #> (default)<# } #>
+
+<# if (paramSet.Description != null) { #>
+
+<#= paramSet.Description #>
+<# } #>
+
+```powershell
+<#= Command.Name #><# foreach (var param in paramSet.Parameters) { #>
+ <# if (!param.Mandatory) {#>[<# } #>-<#= param.Name #><#  { if (param.Type != "SwitchParameter") { #> <<#= param.Type #>><# } } #><# if (!param.Mandatory) {#>]<# } #>
+<# } #>
+
+```
+
+| Parameter | Req. | Type | Description |
+| --- | --- | --- | --- |
+<# foreach (var param in paramSet.Parameters) { #>
+| `-<#= param.Name #>` | <# if (param.Mandatory) { #>✅<# } else { #>❌<# } #> | <# if (param.Type != "SwitchParameter") { #><#= param.Type #><# } else { #>Switch<# } #> | <#= param.Description #> |
+<# } #>
+
+<# } #>
+<# if (Command.Examples.Any()) { #>
+## Examples
+<# 
+int exampleIndex = 1;
+foreach (var example in Command.Examples) { #>
+
+### <# if(example.Name is not null) { #><#= example.Name #><# } else { #>Example <#= exampleIndex #><# exampleIndex++; } #>
+
+<# if (example.Description is not null) { #>
+
+<#= example.Description #>
+
+<# } #>
+```powershell
+<#= example.Code #>
+```
+<# } } #>

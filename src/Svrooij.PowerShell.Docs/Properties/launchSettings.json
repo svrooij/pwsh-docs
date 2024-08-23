@@ -2,7 +2,7 @@
   "profiles": {
     "Svrooij.PowerShell.Docs": {
       "commandName": "Project",
-      "commandLineArgs": "D:\\source\\WingetIntune\\src\\Svrooij.WinTuner.CmdLets\\bin\\Debug\\net6.0\\Svrooij.WinTuner.CmdLets.dll "
+      "commandLineArgs": "--dll D:\\source\\WingetIntune\\src\\Svrooij.WinTuner.CmdLets\\bin\\\\Debug\\net6.0\\Svrooij.WinTuner.CmdLets.dll --use-xml-docs --md-output D:\\source\\wintuner-generated"
     }
   }
 }
