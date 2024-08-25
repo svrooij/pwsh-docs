@@ -20,7 +20,7 @@ sidebar_position: <# if (Command.Order.HasValue) { #><#= Command.Order.Value #><
 <# } #>
 ## Syntax
 
-<# foreach (var paramSet in Command.GetParameterSets()) { #>
+<# if(Command.GetParameterSets().Any()) { foreach (var paramSet in Command.GetParameterSets()) { #>
 ### <# if (paramSet.Name != null) { #><#= paramSet.Name #><# } else { #>Default parameter set<# } #><# if (paramSet.IsDefault) { #> (default)<# } #>
 
 <# if (paramSet.Description != null) { #>
@@ -40,6 +40,11 @@ sidebar_position: <# if (Command.Order.HasValue) { #><#= Command.Order.Value #><
 <# foreach (var param in paramSet.Parameters) { #>
 | `-<#= param.Name #>` | <# if (param.Mandatory) { #>✅<# } else { #>❌<# } #> | <# if (param.Type != "SwitchParameter") { #><#= param.Type #><# } else { #>Switch<# } #> | <#= param.Description #> |
 <# } #>
+
+<# } } else { #>
+```powershell
+<#= Command.Name #>
+```
 
 <# } #>
 <# if (Command.Examples?.Any() == true) { #>

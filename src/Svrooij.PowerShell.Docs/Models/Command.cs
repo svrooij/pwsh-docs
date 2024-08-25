@@ -15,15 +15,22 @@ public class Command
     {
         CmdletType = cmdletType;
         var cmdLetAttribute = CmdletType.GetCustomAttribute<CmdletAttribute>();
-        Name = cmdLetAttribute!.VerbName + "-" + cmdLetAttribute.NounName;
+        Verb = cmdLetAttribute!.VerbName;
+        Noun = cmdLetAttribute.NounName;
+        Name = $"{Verb}-{Noun}";
+        HelpUri = string.IsNullOrEmpty(cmdLetAttribute.HelpUri) ? cmdLetAttribute.HelpUri : null;
         DefaultParameterSetName = cmdLetAttribute.DefaultParameterSetName == DEFAULT_PARAMETER_SET_NAME ? null : cmdLetAttribute.DefaultParameterSetName;
         LoadCommandInfo();
     }
     public Type CmdletType { get; set; }
     public string Name { get; set; }
+    public string Verb { get; set; }
+    public string Noun { get; set; }
+    public string? HelpUri { get; set; }
     public string? Synopsis { get; set; }
     public string? Description { get; set; }
     public string? DefaultParameterSetName { get; set; }
+    public string? OutputType { get; set; }
     public int? Order { get; set; }
     public List<Models.CommandParameterSet>? ParameterSets { get; set; }
     public List<Models.CommandParameter> Parameters { get; set; } = new List<Models.CommandParameter>();
@@ -55,6 +62,12 @@ public class Command
                     Parameters.Add(commandParameter);
                 }
             }
+        }
+
+        var outputTypeAttribute = CmdletType.GetCustomAttribute<OutputTypeAttribute>();
+        if (outputTypeAttribute is not null)
+        {
+            OutputType= string.Join(", ", outputTypeAttribute.Type.Select(t => t.Name));
         }
 
     }
