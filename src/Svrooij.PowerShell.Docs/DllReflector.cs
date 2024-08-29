@@ -1,6 +1,5 @@
 ﻿using Svrooij.PowerShell.Docs.Models;
 using System.Xml;
-using System.Xml.Serialization;
 
 namespace Svrooij.PowerShell.Docs
 {
@@ -34,7 +33,7 @@ namespace Svrooij.PowerShell.Docs
             }
         }
 
-        public Task EnhanceDocsWithXmlDocs(string xmlDocsPath)
+        public Task EnhanceCommandsWithXmlDocs(string xmlDocsPath)
         {
             // Load the xml documentation
             var xmlDocs = new XmlDocument();
@@ -181,147 +180,7 @@ namespace Svrooij.PowerShell.Docs
                 Directory.CreateDirectory(directory!);
             }
 
-            var document = new Maml.helpItems();
-            document.command = new Maml.command[commands.Count];
-            var index = 0;
-            foreach (var command in commands)
-            {
-                var helpItem = new Maml.command();
-                helpItem.details = new Maml.commandDetails
-                {
-                    name = command.Name,
-                    verb = command.Verb,
-                    noun = command.Noun,
-                    description = new Maml.description
-                    {
-                        para = command.Synopsis ?? command.Description ?? ""
-                    }
-                };
-                helpItem.description = new Maml.description()
-                {
-                    para = command.Description ?? ""
-                };
-
-                var parameterSets = command.GetParameterSets();
-                if (parameterSets?.Any() == true)
-                {
-                    helpItem.syntax = new Maml.commandSyntaxItem[parameterSets.Count()];
-                    for(int setIndex = 0; setIndex < parameterSets.Count(); setIndex++)
-                    
-                    {
-                        var parameterSet = parameterSets.ElementAt(setIndex);
-                        var syntaxItem = new Maml.commandSyntaxItem();
-                        syntaxItem.name = parameterSet.Name ?? command.Name;
-                        syntaxItem.parameter = new Maml.commandSyntaxItemParameter[parameterSet.Parameters!.Count()];
-                        var parameterSetParameters = parameterSet.Parameters!.ToList();
-                        for (int i = 0; i < parameterSet.Parameters!.Count(); i++)
-                        {
-                            var parameter = parameterSetParameters!.ElementAt(i);
-                            syntaxItem.parameter[i] = new Maml.commandSyntaxItemParameter
-                            {
-                                required = parameter.Mandatory,
-                                variableLength = true,
-                                name = parameter.Name,
-                                position = parameter.Position?.ToString() ?? "0",
-                                aliases = "none",
-                                pipelineInput = "false",
-                                description = new Maml.description
-                                {
-                                    para = parameter.Description ?? ""
-                                },
-                                type = new Maml.type
-                                {
-                                    name = parameter.Type
-                                }
-                            };
-                        }
-                        helpItem.syntax[setIndex] = syntaxItem;
-                    }
-                }
-
-                var parameters = command.Parameters.DistinctBy(p => p.Name);
-                if (parameters.Any())
-                {
-                    helpItem.parameters = new Maml.commandParameter[parameters.Count()];
-                    for (int i = 0; i < parameters.Count(); i++)
-                    {
-                        var parameter = parameters.ElementAt(i);
-                        helpItem.parameters[i] = new Maml.commandParameter
-                        {
-                            required = parameter.Mandatory,
-                            variableLength = true,
-                            name = parameter.Name,
-                            description = new Maml.description
-                            {
-                                para = parameter.Description ?? ""
-                            },
-                            type = new Maml.type
-                            {
-                                name = parameter.Type
-                            }
-                        };
-                    }
-                }
-
-                // Add input/output types
-                if (command.OutputType is not null)
-                {
-                    helpItem.returnValues = new Maml.commandReturnValues
-                    {
-                        returnValue = new Maml.commandReturnValuesReturnValue
-                        {
-                            description = new Maml.description
-                            {
-                                para = command.OutputType
-                            },
-                            type = new Maml.type
-                            {
-                                name = command.OutputType
-                            }
-                        }
-                    };
-                }
-
-                // Add examples to helpItem
-                if (command.Examples?.Any() == true)
-                {
-                    helpItem.examples = new Maml.commandExample[command.Examples.Count()];
-                    for (int i = 0; i < command.Examples.Count(); i++)
-                    {
-                        var example = command.Examples.ElementAt(i);
-                        helpItem.examples[i] = new Maml.commandExample
-                        {
-                            title = example.Name ?? $"-------- Example {i + 1} ---------",
-                            remarks = new Maml.remarks
-                            {
-                                para = example.Description ?? ""
-                            },
-                            code = $"PS C:\\&gt; {example.Code}"
-                        };
-                    }
-                }
-
-                if (command.HelpUri != null)
-                {
-                    helpItem.relatedLinks = new Maml.commandRelatedLinks
-                    {
-                        navigationLink = new Maml.navigationLink
-                        {
-                            linkText = "Online Version",
-                            uri = command.HelpUri
-                        }
-                    };
-                }
-
-                document.command[index] = helpItem;
-                index++;
-            }
-
-            var serializer = new XmlSerializer(typeof(Maml.helpItems));
-            var writer = new StreamWriter(outputFile);
-            serializer.Serialize(writer, document);
-            await writer.FlushAsync();
-            await writer.DisposeAsync();
+            await Maml.MamlGenerator.GenerateMamlFile(outputFile, commands);
 
         }
     }

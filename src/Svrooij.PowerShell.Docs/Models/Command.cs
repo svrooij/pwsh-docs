@@ -57,7 +57,14 @@ public class Command
                         Type = parameter.PropertyType.IsGenericType ? parameter.PropertyType.GenericTypeArguments.FirstOrDefault()?.Name ?? parameter.PropertyType.Name : parameter.PropertyType.Name,
                         Mandatory = parameterAttribute.Mandatory,
                         Position = parameterAttribute.Position < 0 ? 0 : parameterAttribute.Position,
-                        ParameterSetName = parameterAttribute.ParameterSetName == DEFAULT_PARAMETER_SET_NAME ? null : parameterAttribute.ParameterSetName
+                        ParameterSetName = parameterAttribute.ParameterSetName == DEFAULT_PARAMETER_SET_NAME ? null : parameterAttribute.ParameterSetName,
+                        ValueFromPipeline = parameterAttribute.ValueFromPipeline,
+                        ValueFromPipelineByPropertyName = parameterAttribute.ValueFromPipelineByPropertyName,
+                        ValueFromRemainingArguments = parameterAttribute.ValueFromRemainingArguments,
+                        // if the parameter has an enum, we will add the string values to the enumValues
+                        EnumValues = parameter.PropertyType.IsEnum ? Enum.GetNames(parameter.PropertyType) : null
+
+
                     };
                     Parameters.Add(commandParameter);
                 }

@@ -52,12 +52,10 @@ internal class PsRootCommand
         if (useXmlDocs)
         {
             string xmlDocsPath = dllPath.Replace(".dll", ".xml");
-            await reflector.EnhanceDocsWithXmlDocs(xmlDocsPath);
+            await reflector.EnhanceCommandsWithXmlDocs(xmlDocsPath);
             Console.WriteLine("Xml docs loaded and parsed");
         }
-
         
-
         if (mdOutput != null)
         {
             Console.WriteLine("Writing markdown output to: {0}", mdOutput);

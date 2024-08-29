@@ -16,9 +16,7 @@ namespace Svrooij.PowerShell.Docs.Maml;
 public partial class helpItems
 {
 
-    
-
-    private command[] commandField;
+    private command[]? commandField;
 
     private string schemaField;
 
@@ -71,7 +69,7 @@ public partial class command
 
     private description descriptionField;
 
-    private commandSyntaxItem[] syntaxField;
+    private commandSyntaxItem[]? syntaxField;
 
     private commandParameter[] parametersField;
 
@@ -81,7 +79,7 @@ public partial class command
 
     private alertSet alertSetField;
 
-    private commandExample[] examplesField;
+    private commandExample[]? examplesField;
 
     private commandRelatedLinks relatedLinksField;
 
@@ -114,7 +112,7 @@ public partial class command
 
     /// <remarks/>
     [System.Xml.Serialization.XmlArrayItemAttribute("syntaxItem", IsNullable = false)]
-    public commandSyntaxItem[] syntax
+    public commandSyntaxItem[]? syntax
     {
         get
         {
@@ -183,7 +181,7 @@ public partial class command
 
     /// <remarks/>
     [System.Xml.Serialization.XmlArrayItemAttribute("example", IsNullable = false)]
-    public commandExample[] examples
+    public commandExample[]? examples
     {
         get
         {
@@ -311,7 +309,7 @@ public partial class commandSyntaxItem
 
     private string nameField;
 
-    private commandSyntaxItemParameter[] parameterField;
+    private commandParameter[] parameterField;
 
     /// <remarks/>
     [System.Xml.Serialization.XmlElementAttribute(Namespace = "http://schemas.microsoft.com/maml/2004/10")]
@@ -329,7 +327,7 @@ public partial class commandSyntaxItem
 
     /// <remarks/>
     [System.Xml.Serialization.XmlElementAttribute("parameter")]
-    public commandSyntaxItemParameter[] parameter
+    public commandParameter[] parameter
     {
         get
         {
@@ -338,317 +336,6 @@ public partial class commandSyntaxItem
         set
         {
             this.parameterField = value;
-        }
-    }
-}
-
-/// <remarks/>
-[System.SerializableAttribute()]
-[System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://schemas.microsoft.com/maml/dev/command/2004/10")]
-public partial class commandSyntaxItemParameter
-{
-
-    private string nameField;
-
-    private description descriptionField;
-
-    private commandSyntaxItemParameterParameterValue[] parameterValueGroupField;
-
-    private commandSyntaxItemParameterParameterValue1 parameterValueField;
-
-    private type typeField;
-
-    private string defaultValueField;
-
-    private bool requiredField;
-
-    private bool variableLengthField;
-
-    private bool globbingField;
-
-    private string pipelineInputField;
-
-    private string positionField;
-
-    private string aliasesField;
-
-    /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute(Namespace = "http://schemas.microsoft.com/maml/2004/10")]
-    public string name
-    {
-        get
-        {
-            return this.nameField;
-        }
-        set
-        {
-            this.nameField = value;
-        }
-    }
-
-    /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute(Namespace = "http://schemas.microsoft.com/maml/2004/10")]
-    public description description
-    {
-        get
-        {
-            return this.descriptionField;
-        }
-        set
-        {
-            this.descriptionField = value;
-        }
-    }
-
-    /// <remarks/>
-    [System.Xml.Serialization.XmlArrayItemAttribute("parameterValue", IsNullable = false)]
-    public commandSyntaxItemParameterParameterValue[] parameterValueGroup
-    {
-        get
-        {
-            return this.parameterValueGroupField;
-        }
-        set
-        {
-            this.parameterValueGroupField = value;
-        }
-    }
-
-    /// <remarks/>
-    public commandSyntaxItemParameterParameterValue1 parameterValue
-    {
-        get
-        {
-            return this.parameterValueField;
-        }
-        set
-        {
-            this.parameterValueField = value;
-        }
-    }
-
-    /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute(Namespace = "http://schemas.microsoft.com/maml/dev/2004/10")]
-    public type type
-    {
-        get
-        {
-            return this.typeField;
-        }
-        set
-        {
-            this.typeField = value;
-        }
-    }
-
-    /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute(Namespace = "http://schemas.microsoft.com/maml/dev/2004/10")]
-    public string defaultValue
-    {
-        get
-        {
-            return this.defaultValueField;
-        }
-        set
-        {
-            this.defaultValueField = value;
-        }
-    }
-
-    /// <remarks/>
-    [System.Xml.Serialization.XmlAttributeAttribute()]
-    public bool required
-    {
-        get
-        {
-            return this.requiredField;
-        }
-        set
-        {
-            this.requiredField = value;
-        }
-    }
-
-    /// <remarks/>
-    [System.Xml.Serialization.XmlAttributeAttribute()]
-    public bool variableLength
-    {
-        get
-        {
-            return this.variableLengthField;
-        }
-        set
-        {
-            this.variableLengthField = value;
-        }
-    }
-
-    /// <remarks/>
-    [System.Xml.Serialization.XmlAttributeAttribute()]
-    public bool globbing
-    {
-        get
-        {
-            return this.globbingField;
-        }
-        set
-        {
-            this.globbingField = value;
-        }
-    }
-
-    /// <remarks/>
-    [System.Xml.Serialization.XmlAttributeAttribute()]
-    public string pipelineInput
-    {
-        get
-        {
-            return this.pipelineInputField;
-        }
-        set
-        {
-            this.pipelineInputField = value;
-        }
-    }
-
-    /// <remarks/>
-    [System.Xml.Serialization.XmlAttributeAttribute()]
-    public string position
-    {
-        get
-        {
-            return this.positionField;
-        }
-        set
-        {
-            this.positionField = value;
-        }
-    }
-
-    /// <remarks/>
-    [System.Xml.Serialization.XmlAttributeAttribute()]
-    public string aliases
-    {
-        get
-        {
-            return this.aliasesField;
-        }
-        set
-        {
-            this.aliasesField = value;
-        }
-    }
-}
-
-/// <remarks/>
-[System.SerializableAttribute()]
-[System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://schemas.microsoft.com/maml/dev/command/2004/10")]
-public partial class commandSyntaxItemParameterParameterValue
-{
-
-    private bool requiredField;
-
-    private bool variableLengthField;
-
-    private string valueField;
-
-    /// <remarks/>
-    [System.Xml.Serialization.XmlAttributeAttribute()]
-    public bool required
-    {
-        get
-        {
-            return this.requiredField;
-        }
-        set
-        {
-            this.requiredField = value;
-        }
-    }
-
-    /// <remarks/>
-    [System.Xml.Serialization.XmlAttributeAttribute(Form = System.Xml.Schema.XmlSchemaForm.Qualified)]
-    public bool variableLength
-    {
-        get
-        {
-            return this.variableLengthField;
-        }
-        set
-        {
-            this.variableLengthField = value;
-        }
-    }
-
-    /// <remarks/>
-    [System.Xml.Serialization.XmlTextAttribute()]
-    public string Value
-    {
-        get
-        {
-            return this.valueField;
-        }
-        set
-        {
-            this.valueField = value;
-        }
-    }
-}
-
-/// <remarks/>
-[System.SerializableAttribute()]
-[System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://schemas.microsoft.com/maml/dev/command/2004/10")]
-public partial class commandSyntaxItemParameterParameterValue1
-{
-
-    private bool requiredField;
-
-    private bool variableLengthField;
-
-    private string valueField;
-
-    /// <remarks/>
-    [System.Xml.Serialization.XmlAttributeAttribute()]
-    public bool required
-    {
-        get
-        {
-            return this.requiredField;
-        }
-        set
-        {
-            this.requiredField = value;
-        }
-    }
-
-    /// <remarks/>
-    [System.Xml.Serialization.XmlAttributeAttribute()]
-    public bool variableLength
-    {
-        get
-        {
-            return this.variableLengthField;
-        }
-        set
-        {
-            this.variableLengthField = value;
-        }
-    }
-
-    /// <remarks/>
-    [System.Xml.Serialization.XmlTextAttribute()]
-    public string Value
-    {
-        get
-        {
-            return this.valueField;
-        }
-        set
-        {
-            this.valueField = value;
         }
     }
 }
@@ -705,8 +392,10 @@ public partial class commandParameter
 
     private description descriptionField;
 
-    private commandParameterParameterValue parameterValueField;
+    private commandParameterParameterValue[]? parameterValueGroupField;
 
+    private commandParameterParameterValue parameterValueField;
+    
     private type typeField;
 
     private string defaultValueField;
@@ -752,6 +441,20 @@ public partial class commandParameter
     }
 
     /// <remarks/>
+    [System.Xml.Serialization.XmlArrayItemAttribute("parameterValue", IsNullable = false)]
+    public commandParameterParameterValue[]? parameterValueGroup
+    {
+        get
+        {
+            return this.parameterValueGroupField;
+        }
+        set
+        {
+            this.parameterValueGroupField = value;
+        }
+    }
+
+    /// <remarks/>
     public commandParameterParameterValue parameterValue
     {
         get
@@ -763,6 +466,8 @@ public partial class commandParameter
             this.parameterValueField = value;
         }
     }
+
+    
 
     /// <remarks/>
     [System.Xml.Serialization.XmlElementAttribute(Namespace = "http://schemas.microsoft.com/maml/dev/2004/10")]
