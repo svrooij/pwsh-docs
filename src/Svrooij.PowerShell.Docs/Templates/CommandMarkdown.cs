@@ -103,7 +103,7 @@ namespace Svrooij.PowerShell.Docs.Templates
             this.Write("## Syntax\r\n\r\n");
             
             #line 23 "D:\source\Svrooij.PowerShell.Docs\src\Svrooij.PowerShell.Docs\Templates\CommandMarkdown.tt"
- foreach (var paramSet in Command.GetParameterSets()) { 
+ if(Command.GetParameterSets().Any()) { foreach (var paramSet in Command.GetParameterSets()) { 
             
             #line default
             #line hidden
@@ -318,19 +318,33 @@ namespace Svrooij.PowerShell.Docs.Templates
             this.Write("\r\n");
             
             #line 44 "D:\source\Svrooij.PowerShell.Docs\src\Svrooij.PowerShell.Docs\Templates\CommandMarkdown.tt"
+ } } else { 
+            
+            #line default
+            #line hidden
+            this.Write("```powershell\r\n");
+            
+            #line 46 "D:\source\Svrooij.PowerShell.Docs\src\Svrooij.PowerShell.Docs\Templates\CommandMarkdown.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(Command.Name));
+            
+            #line default
+            #line hidden
+            this.Write("\r\n```\r\n\r\n");
+            
+            #line 49 "D:\source\Svrooij.PowerShell.Docs\src\Svrooij.PowerShell.Docs\Templates\CommandMarkdown.tt"
  } 
             
             #line default
             #line hidden
             
-            #line 45 "D:\source\Svrooij.PowerShell.Docs\src\Svrooij.PowerShell.Docs\Templates\CommandMarkdown.tt"
+            #line 50 "D:\source\Svrooij.PowerShell.Docs\src\Svrooij.PowerShell.Docs\Templates\CommandMarkdown.tt"
  if (Command.Examples?.Any() == true) { 
             
             #line default
             #line hidden
             this.Write("## Examples\r\n");
             
-            #line 47 "D:\source\Svrooij.PowerShell.Docs\src\Svrooij.PowerShell.Docs\Templates\CommandMarkdown.tt"
+            #line 52 "D:\source\Svrooij.PowerShell.Docs\src\Svrooij.PowerShell.Docs\Templates\CommandMarkdown.tt"
  
 int exampleIndex = 1;
 foreach (var example in Command.Examples) { 
@@ -339,67 +353,67 @@ foreach (var example in Command.Examples) {
             #line hidden
             this.Write("\r\n### ");
             
-            #line 51 "D:\source\Svrooij.PowerShell.Docs\src\Svrooij.PowerShell.Docs\Templates\CommandMarkdown.tt"
+            #line 56 "D:\source\Svrooij.PowerShell.Docs\src\Svrooij.PowerShell.Docs\Templates\CommandMarkdown.tt"
  if(example.Name is not null) { 
             
             #line default
             #line hidden
             
-            #line 51 "D:\source\Svrooij.PowerShell.Docs\src\Svrooij.PowerShell.Docs\Templates\CommandMarkdown.tt"
+            #line 56 "D:\source\Svrooij.PowerShell.Docs\src\Svrooij.PowerShell.Docs\Templates\CommandMarkdown.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(example.Name));
             
             #line default
             #line hidden
             
-            #line 51 "D:\source\Svrooij.PowerShell.Docs\src\Svrooij.PowerShell.Docs\Templates\CommandMarkdown.tt"
+            #line 56 "D:\source\Svrooij.PowerShell.Docs\src\Svrooij.PowerShell.Docs\Templates\CommandMarkdown.tt"
  } else { 
             
             #line default
             #line hidden
             this.Write("Example ");
             
-            #line 51 "D:\source\Svrooij.PowerShell.Docs\src\Svrooij.PowerShell.Docs\Templates\CommandMarkdown.tt"
+            #line 56 "D:\source\Svrooij.PowerShell.Docs\src\Svrooij.PowerShell.Docs\Templates\CommandMarkdown.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(exampleIndex));
             
             #line default
             #line hidden
             
-            #line 51 "D:\source\Svrooij.PowerShell.Docs\src\Svrooij.PowerShell.Docs\Templates\CommandMarkdown.tt"
+            #line 56 "D:\source\Svrooij.PowerShell.Docs\src\Svrooij.PowerShell.Docs\Templates\CommandMarkdown.tt"
  exampleIndex++; } 
             
             #line default
             #line hidden
             this.Write("\r\n");
             
-            #line 53 "D:\source\Svrooij.PowerShell.Docs\src\Svrooij.PowerShell.Docs\Templates\CommandMarkdown.tt"
+            #line 58 "D:\source\Svrooij.PowerShell.Docs\src\Svrooij.PowerShell.Docs\Templates\CommandMarkdown.tt"
  if (example.Description is not null) { 
             
             #line default
             #line hidden
             this.Write("\r\n");
             
-            #line 55 "D:\source\Svrooij.PowerShell.Docs\src\Svrooij.PowerShell.Docs\Templates\CommandMarkdown.tt"
+            #line 60 "D:\source\Svrooij.PowerShell.Docs\src\Svrooij.PowerShell.Docs\Templates\CommandMarkdown.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(example.Description));
             
             #line default
             #line hidden
             this.Write("\r\n\r\n");
             
-            #line 57 "D:\source\Svrooij.PowerShell.Docs\src\Svrooij.PowerShell.Docs\Templates\CommandMarkdown.tt"
+            #line 62 "D:\source\Svrooij.PowerShell.Docs\src\Svrooij.PowerShell.Docs\Templates\CommandMarkdown.tt"
  } 
             
             #line default
             #line hidden
             this.Write("```powershell\r\n");
             
-            #line 59 "D:\source\Svrooij.PowerShell.Docs\src\Svrooij.PowerShell.Docs\Templates\CommandMarkdown.tt"
+            #line 64 "D:\source\Svrooij.PowerShell.Docs\src\Svrooij.PowerShell.Docs\Templates\CommandMarkdown.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(example.Code));
             
             #line default
             #line hidden
             this.Write("\r\n```\r\n");
             
-            #line 61 "D:\source\Svrooij.PowerShell.Docs\src\Svrooij.PowerShell.Docs\Templates\CommandMarkdown.tt"
+            #line 66 "D:\source\Svrooij.PowerShell.Docs\src\Svrooij.PowerShell.Docs\Templates\CommandMarkdown.tt"
  } } 
             
             #line default

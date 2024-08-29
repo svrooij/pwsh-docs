@@ -2,11 +2,29 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-	<TargetFramework>net6.0</TargetFramework>
     <TargetFrameworks>net8.0;net6.0</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+		<RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <Authors>Stephan van Rooij</Authors>
+    <Copyright>2024</Copyright>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryType>git</RepositoryType>
+    <PackageProjectUrl>https://github.com/svrooij/pwsh-docs</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/svrooij/pwsh-docs.git</RepositoryUrl>
+    <PackageTags>PowerShell;Binary Module;Documentation</PackageTags>
+    <PackageId>SvRooij.PowerShell.Docs</PackageId>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>pwsh-docs</ToolCommandName>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
   </PropertyGroup>
+
+	<ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\README.md" />
+    <None Include="..\..\LICENSE.txt" Pack="true" PackagePath="\LICENSE.txt" />
+  </ItemGroup>
 
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net6.0' ">
 		<PackageReference Include="Microsoft.PowerShell.SDK" Version="7.2.19" />

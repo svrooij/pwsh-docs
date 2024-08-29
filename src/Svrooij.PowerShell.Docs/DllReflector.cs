@@ -33,7 +33,7 @@ namespace Svrooij.PowerShell.Docs
             }
         }
 
-        public Task EnhanceDocsWithXmlDocs(string xmlDocsPath)
+        public Task EnhanceCommandsWithXmlDocs(string xmlDocsPath)
         {
             // Load the xml documentation
             var xmlDocs = new XmlDocument();
@@ -65,7 +65,7 @@ namespace Svrooij.PowerShell.Docs
                     {
                         command.Description = description.InnerText;
                     }
-                    
+
 
                     if (string.IsNullOrEmpty(command.Synopsis))
                     {
@@ -171,6 +171,17 @@ namespace Svrooij.PowerShell.Docs
                 await File.WriteAllTextAsync(outputFilePath, template.TransformText());
             }
         }
-        
+
+        public async Task WriteMamlFile(string outputFile)
+        {
+            var directory = Path.GetDirectoryName(outputFile);
+            if (!Directory.Exists(directory!))
+            {
+                Directory.CreateDirectory(directory!);
+            }
+
+            await Maml.MamlGenerator.GenerateMamlFile(outputFile, commands);
+
+        }
     }
 }

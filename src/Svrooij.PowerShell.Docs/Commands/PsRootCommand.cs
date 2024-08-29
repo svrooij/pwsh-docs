@@ -24,21 +24,27 @@ internal class PsRootCommand
         description: "The path where the markdown files will be written to."
     );
 
+    private static Option<string?> MamlOutput = new Option<string?>(
+    "--maml-file",
+    description: "Output location for the maml file (powershell docs format)"
+);
+
     public static RootCommand GetRootCommand()
     {
         var rootCommand = new RootCommand("Generate documentation for a binary PowerShell module")
         {
             DllOption,
             XmlDocs,
-            MdOutput
+            MdOutput,
+            MamlOutput
         };
 
-        rootCommand.SetHandler(Execute, DllOption, XmlDocs, MdOutput); 
+        rootCommand.SetHandler(Execute, DllOption, XmlDocs, MdOutput, MamlOutput);
 
         return rootCommand;
     }
 
-    public static async Task Execute(string dllPath, bool useXmlDocs, string? mdOutput)
+    public static async Task Execute(string dllPath, bool useXmlDocs, string? mdOutput, string? mamlOutput)
     {
         var reflector = new DllReflector(dllPath);
         Console.WriteLine("Assemply loaded and parsed");
@@ -46,16 +52,20 @@ internal class PsRootCommand
         if (useXmlDocs)
         {
             string xmlDocsPath = dllPath.Replace(".dll", ".xml");
-            await reflector.EnhanceDocsWithXmlDocs(xmlDocsPath);
+            await reflector.EnhanceCommandsWithXmlDocs(xmlDocsPath);
             Console.WriteLine("Xml docs loaded and parsed");
         }
-
-        
 
         if (mdOutput != null)
         {
             Console.WriteLine("Writing markdown output to: {0}", mdOutput);
             await reflector.WriteMarkdownOutput(mdOutput);
+        }
+
+        if (mamlOutput != null)
+        {
+            Console.WriteLine("Writing maml file to: {0}", mamlOutput);
+            await reflector.WriteMamlFile(mamlOutput);
         }
 
         //Console.WriteLine();

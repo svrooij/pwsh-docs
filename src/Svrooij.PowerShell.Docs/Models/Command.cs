@@ -15,15 +15,22 @@ public class Command
     {
         CmdletType = cmdletType;
         var cmdLetAttribute = CmdletType.GetCustomAttribute<CmdletAttribute>();
-        Name = cmdLetAttribute!.VerbName + "-" + cmdLetAttribute.NounName;
+        Verb = cmdLetAttribute!.VerbName;
+        Noun = cmdLetAttribute.NounName;
+        Name = $"{Verb}-{Noun}";
+        HelpUri = string.IsNullOrEmpty(cmdLetAttribute.HelpUri) ? cmdLetAttribute.HelpUri : null;
         DefaultParameterSetName = cmdLetAttribute.DefaultParameterSetName == DEFAULT_PARAMETER_SET_NAME ? null : cmdLetAttribute.DefaultParameterSetName;
         LoadCommandInfo();
     }
     public Type CmdletType { get; set; }
     public string Name { get; set; }
+    public string Verb { get; set; }
+    public string Noun { get; set; }
+    public string? HelpUri { get; set; }
     public string? Synopsis { get; set; }
     public string? Description { get; set; }
     public string? DefaultParameterSetName { get; set; }
+    public string? OutputType { get; set; }
     public int? Order { get; set; }
     public List<Models.CommandParameterSet>? ParameterSets { get; set; }
     public List<Models.CommandParameter> Parameters { get; set; } = new List<Models.CommandParameter>();
@@ -37,24 +44,38 @@ public class Command
     private void LoadCommandInfo()
     {
         var parameters = CmdletType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-        foreach(var parameter in parameters)
+        foreach (var parameter in parameters)
         {
             var parameterAttributes = parameter.GetCustomAttributes<ParameterAttribute>();
             if (parameterAttributes != null)
             {
                 foreach (var parameterAttribute in parameterAttributes)
                 {
-                    var commandParameter = new Models.CommandParameter {
+                    var commandParameter = new Models.CommandParameter
+                    {
                         Description = parameterAttribute.HelpMessage,
                         Name = parameter.Name,
                         Type = parameter.PropertyType.IsGenericType ? parameter.PropertyType.GenericTypeArguments.FirstOrDefault()?.Name ?? parameter.PropertyType.Name : parameter.PropertyType.Name,
                         Mandatory = parameterAttribute.Mandatory,
                         Position = parameterAttribute.Position < 0 ? 0 : parameterAttribute.Position,
-                        ParameterSetName = parameterAttribute.ParameterSetName == DEFAULT_PARAMETER_SET_NAME ? null : parameterAttribute.ParameterSetName
+                        ParameterSetName = parameterAttribute.ParameterSetName == DEFAULT_PARAMETER_SET_NAME ? null : parameterAttribute.ParameterSetName,
+                        ValueFromPipeline = parameterAttribute.ValueFromPipeline,
+                        ValueFromPipelineByPropertyName = parameterAttribute.ValueFromPipelineByPropertyName,
+                        ValueFromRemainingArguments = parameterAttribute.ValueFromRemainingArguments,
+                        // if the parameter has an enum, we will add the string values to the enumValues
+                        EnumValues = parameter.PropertyType.IsEnum ? Enum.GetNames(parameter.PropertyType) : null
+
+
                     };
                     Parameters.Add(commandParameter);
                 }
             }
+        }
+
+        var outputTypeAttribute = CmdletType.GetCustomAttribute<OutputTypeAttribute>();
+        if (outputTypeAttribute is not null)
+        {
+            OutputType = string.Join(", ", outputTypeAttribute.Type.Select(t => t.Name));
         }
 
     }
@@ -81,11 +102,12 @@ public class Command
             }
             return orderedParameterSets;
         }
-        
+
         var parameterSets = Parameters
             .Where(p => p.ParameterSetName != null)
             .GroupBy(p => p.ParameterSetName)
-            .Select(g => new CommandParameterSet {
+            .Select(g => new CommandParameterSet
+            {
                 Name = g.Key,
                 Parameters = g.ToList(),
                 IsDefault = g.Key == DefaultParameterSetName
@@ -101,7 +123,7 @@ public class Command
                 IsDefault = DefaultParameterSetName is null
             });
         }
-        
+
         return parameterSets.OrderByDescending(p => p.IsDefault).ThenBy(p => p.Name);
     }
 
