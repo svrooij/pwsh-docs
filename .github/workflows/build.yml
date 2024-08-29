@@ -1,0 +1,96 @@
+name: 🏗️🧪📦 Pwsh docs
+
+on:
+  push:
+    branches:
+      - main
+      - feature/maml
+    tags:
+      - v*
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: 🛠️ Build and Test C#
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: read
+      checks: write
+    steps:
+      - name: 👨‍💻 Check-out code
+        uses: actions/checkout@v4
+
+      - name: 👨‍🔧 Setup .NET Core SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.x
+
+      - name: 🔍 Enable problem matchers
+        run: echo "::add-matcher::.github/matchers/dotnet.json"
+
+      - name: 🦸‍♂️ Restore steriods
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          # Look to see if there is a cache hit for the corresponding requirements file
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget
+
+      - name: 🎒 Load packages
+        run: dotnet restore
+
+      - name: 🛠️ Build code
+        run: dotnet build --configuration Release --no-restore
+
+      - name: 📃 Check code formatting
+        if: always()
+        run: dotnet format --verify-no-changes
+
+  publish-nuget:
+    name: 📦 Publish pwsh-docs to nuget
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: [test]
+    steps:
+    - name: 👨‍💻 Check-out code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: 👨‍🔧 Setup .NET Core SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.x
+
+    - name: 🔍 Enable problem matchers
+      run: echo "::add-matcher::.github/matchers/dotnet.json"
+
+    - name: 🦸‍♂️ Restore steriods
+      uses: actions/cache@v4
+      with:
+        path: ~/.nuget/packages
+        # Look to see if there is a cache hit for the corresponding requirements file
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget
+
+    - name: 🎒 Load packages
+      run: dotnet restore
+
+    - name: 🛠️ Build code
+      shell: pwsh
+      run: dotnet build ./src/Svrooij.PowerShell.Docs/Svrooij.PowerShell.Docs.csproj --configuration Release --no-restore -p:Version=$("${{ github.ref_name }}".Substring(1))
+
+    - name: 📦 Pack tool
+      shell: pwsh
+      run: dotnet pack ./src/Svrooij.PowerShell.Docs/Svrooij.PowerShell.Docs.csproj --configuration Release --no-build -p:Version=$("${{ github.ref_name }}".Substring(1))
+
+    - name: ✈️ Publish Svrooij.PowerShell.Docs to nuget.org
+      run: dotnet nuget push ./src/Svrooij.PowerShell.Docs/bin/Release/Svrooij.PowerShell.Docs.*.nupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
+      env:
+        NUGET_AUTH_TOKEN: ${{ secrets.NUGET_TOKEN }}
