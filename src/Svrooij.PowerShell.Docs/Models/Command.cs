@@ -18,7 +18,7 @@ public class Command
         Verb = cmdLetAttribute!.VerbName;
         Noun = cmdLetAttribute.NounName;
         Name = $"{Verb}-{Noun}";
-        HelpUri = string.IsNullOrEmpty(cmdLetAttribute.HelpUri) ? cmdLetAttribute.HelpUri : null;
+        HelpUri = string.IsNullOrEmpty(cmdLetAttribute.HelpUri) ? null : cmdLetAttribute.HelpUri;
         DefaultParameterSetName = cmdLetAttribute.DefaultParameterSetName == DEFAULT_PARAMETER_SET_NAME ? null : cmdLetAttribute.DefaultParameterSetName;
         LoadCommandInfo();
     }
