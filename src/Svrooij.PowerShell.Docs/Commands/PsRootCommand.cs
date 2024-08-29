@@ -39,7 +39,7 @@ internal class PsRootCommand
             MamlOutput
         };
 
-        rootCommand.SetHandler(Execute, DllOption, XmlDocs, MdOutput, MamlOutput); 
+        rootCommand.SetHandler(Execute, DllOption, XmlDocs, MdOutput, MamlOutput);
 
         return rootCommand;
     }
@@ -55,7 +55,7 @@ internal class PsRootCommand
             await reflector.EnhanceCommandsWithXmlDocs(xmlDocsPath);
             Console.WriteLine("Xml docs loaded and parsed");
         }
-        
+
         if (mdOutput != null)
         {
             Console.WriteLine("Writing markdown output to: {0}", mdOutput);

@@ -44,14 +44,15 @@ public class Command
     private void LoadCommandInfo()
     {
         var parameters = CmdletType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-        foreach(var parameter in parameters)
+        foreach (var parameter in parameters)
         {
             var parameterAttributes = parameter.GetCustomAttributes<ParameterAttribute>();
             if (parameterAttributes != null)
             {
                 foreach (var parameterAttribute in parameterAttributes)
                 {
-                    var commandParameter = new Models.CommandParameter {
+                    var commandParameter = new Models.CommandParameter
+                    {
                         Description = parameterAttribute.HelpMessage,
                         Name = parameter.Name,
                         Type = parameter.PropertyType.IsGenericType ? parameter.PropertyType.GenericTypeArguments.FirstOrDefault()?.Name ?? parameter.PropertyType.Name : parameter.PropertyType.Name,
@@ -74,7 +75,7 @@ public class Command
         var outputTypeAttribute = CmdletType.GetCustomAttribute<OutputTypeAttribute>();
         if (outputTypeAttribute is not null)
         {
-            OutputType= string.Join(", ", outputTypeAttribute.Type.Select(t => t.Name));
+            OutputType = string.Join(", ", outputTypeAttribute.Type.Select(t => t.Name));
         }
 
     }
@@ -101,11 +102,12 @@ public class Command
             }
             return orderedParameterSets;
         }
-        
+
         var parameterSets = Parameters
             .Where(p => p.ParameterSetName != null)
             .GroupBy(p => p.ParameterSetName)
-            .Select(g => new CommandParameterSet {
+            .Select(g => new CommandParameterSet
+            {
                 Name = g.Key,
                 Parameters = g.ToList(),
                 IsDefault = g.Key == DefaultParameterSetName
@@ -121,7 +123,7 @@ public class Command
                 IsDefault = DefaultParameterSetName is null
             });
         }
-        
+
         return parameterSets.OrderByDescending(p => p.IsDefault).ThenBy(p => p.Name);
     }
 

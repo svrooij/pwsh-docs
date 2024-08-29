@@ -24,8 +24,10 @@ public class CommandParameter
 
     public string[]? EnumValues { get; set; }
 
-    public string PipelineInput {
-        get {
+    public string PipelineInput
+    {
+        get
+        {
             if (!ValueFromPipeline && !ValueFromPipelineByPropertyName && !ValueFromRemainingArguments)
             {
                 return "False";

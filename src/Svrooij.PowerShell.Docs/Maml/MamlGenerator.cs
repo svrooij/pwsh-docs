@@ -133,10 +133,11 @@ internal static class MamlGenerator
     {
         // make the title the name (or example if no name is set), with dashes in front and after making a total lenght of 80 characters
         var title = $"  {example.Name ?? "Example"}  ";
-        if (title.Length < 60) {
+        if (title.Length < 60)
+        {
             title = title.PadLeft((80 - title.Length) / 2 + title.Length, '-').PadRight(80, '-');
         }
-        
+
         var mamlExample = new commandExample
         {
             title = title,

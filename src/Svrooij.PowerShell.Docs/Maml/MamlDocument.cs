@@ -58,7 +58,7 @@ public partial class command
 {
     [System.Xml.Serialization.XmlNamespaceDeclarations]
     public System.Xml.Serialization.XmlSerializerNamespaces xmlns = new System.Xml.Serialization.XmlSerializerNamespaces(
-          new[] { 
+          new[] {
               new System.Xml.XmlQualifiedName("maml", "http://schemas.microsoft.com/maml/2004/10"),
               new System.Xml.XmlQualifiedName("command", "http://schemas.microsoft.com/maml/dev/command/2004/10"),
               new System.Xml.XmlQualifiedName("dev", "http://schemas.microsoft.com/maml/dev/2004/10"),
@@ -395,7 +395,7 @@ public partial class commandParameter
     private commandParameterParameterValue[]? parameterValueGroupField;
 
     private commandParameterParameterValue parameterValueField;
-    
+
     private type typeField;
 
     private string defaultValueField;
@@ -467,7 +467,7 @@ public partial class commandParameter
         }
     }
 
-    
+
 
     /// <remarks/>
     [System.Xml.Serialization.XmlElementAttribute(Namespace = "http://schemas.microsoft.com/maml/dev/2004/10")]
