@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.CommandLine;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.CommandLine;
 
 namespace Svrooij.PowerShell.Docs.Commands;
 
@@ -67,16 +62,5 @@ internal class PsRootCommand
             Console.WriteLine("Writing maml file to: {0}", mamlOutput);
             await reflector.WriteMamlFile(mamlOutput);
         }
-
-        //Console.WriteLine();
-        //Console.WriteLine("Commands found:");
-        //foreach (var command in reflector.GetCommands())
-        //{
-        //    Console.WriteLine(" -> {0} {1}", command.Name, command.Synopsis);
-        //    foreach (var parameter in command.Parameters)
-        //    {
-        //        Console.WriteLine("    -{0} ({1}) {2}", parameter.Name, parameter.Type, parameter.Description);
-        //    }
-        //}
     }
 }

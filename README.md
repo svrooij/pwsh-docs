@@ -27,6 +27,38 @@ pwsh-docs --dll "path\to\your\module.dll" --use-xml-docs --md-output "path\to\ou
 | `--md-output "{path-here}"` | The path to the output directory for the markdown files. |
 | `--maml-file "{path-here}"` | The path to the maml file. |
 
+### Automate generation
+
+You can automate the generation of the documentation by adding the command to your build pipeline. For example, you can add the following to your `csproj` file:
+
+```xml
+<PropertyGroup>
+  <!-- Add  PowerShellDocsFile to first property group, change the filename to the file you want-->
+  <PowerShellDocsFile>YourModuleName.dll-Help.xml</PowerShellDocsFile>
+</PropertyGroup>
+```
+
+And then add the following build steps to your `csproj` file:
+
+```xml
+<!-- Generate the documentation after the build -->
+ <Target Name="GenerateDocumentation" AfterTargets="AfterBuild" Outputs="$(PowerShellDocsFile)" Condition="!Exists($(PowerShellDocsFile))">
+  <Message Text="Generating $(PowerShellDocsFile)" Importance="high" />
+  <Message Text="Project path $(ProjectDir)" Importance="high" />
+  <Message Text="Output path $(OutputPath)" Importance="high" />
+  <Exec Command="pwsh-docs --dll $(ProjectDir)$(OutputPath)\Svrooij.WinTuner.CmdLets.dll --use-xml-docs --maml-file $(ProjectDir)\$(PowerShellDocsFile)" />
+  <OnError ExecuteTargets="DocsGenerationError" />
+ </Target>
+<!-- Error target, to get a decent error message -->
+ <Target Name="DocsGenerationError">
+  <Error Text="Documentation could not be generated" />
+ </Target>
+<!-- Clean target, to remove the documentation file -->
+ <Target Name="RemoveDocumentation" AfterTargets="CoreClean">
+  <Delete Files="$(PowerShellDocsFile)" />
+ </Target>
+```
+
 ## Outputs
 
 The tool will generate markdown files and or a maml file, depending on the arguments you provide.

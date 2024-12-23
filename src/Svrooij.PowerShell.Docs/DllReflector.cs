@@ -9,7 +9,6 @@ namespace Svrooij.PowerShell.Docs
         public DllReflector(string dllPath)
         {
             LoadCommandsFromDllPath(dllPath);
-
         }
 
         public List<Command> GetCommands() => commands;
@@ -181,7 +180,6 @@ namespace Svrooij.PowerShell.Docs
             }
 
             await Maml.MamlGenerator.GenerateMamlFile(outputFile, commands);
-
         }
     }
 }
