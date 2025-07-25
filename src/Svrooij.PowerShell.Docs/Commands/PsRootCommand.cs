@@ -41,26 +41,40 @@ internal class PsRootCommand
 
     public static async Task Execute(string dllPath, bool useXmlDocs, string? mdOutput, string? mamlOutput)
     {
-        var reflector = new DllReflector(dllPath);
-        Console.WriteLine("Assemply loaded and parsed");
-
-        if (useXmlDocs)
+        try
         {
-            string xmlDocsPath = dllPath.Replace(".dll", ".xml");
-            await reflector.EnhanceCommandsWithXmlDocs(xmlDocsPath);
-            Console.WriteLine("Xml docs loaded and parsed");
+
+
+            var reflector = new DllReflector(dllPath);
+            Console.WriteLine("Assemply loaded and parsed");
+
+            if (useXmlDocs)
+            {
+                string xmlDocsPath = dllPath.Replace(".dll", ".xml");
+                await reflector.EnhanceCommandsWithXmlDocs(xmlDocsPath);
+                Console.WriteLine("Xml docs loaded and parsed");
+            }
+
+            if (mdOutput != null)
+            {
+                Console.WriteLine("Writing markdown output to: {0}", mdOutput);
+                await reflector.WriteMarkdownOutput(mdOutput);
+            }
+
+            if (mamlOutput != null)
+            {
+                Console.WriteLine("Writing maml file to: {0}", mamlOutput);
+                await reflector.WriteMamlFile(mamlOutput);
+            }
         }
-
-        if (mdOutput != null)
+        catch (Exception ex)
         {
-            Console.WriteLine("Writing markdown output to: {0}", mdOutput);
-            await reflector.WriteMarkdownOutput(mdOutput);
+            Console.Error.WriteLine("An error occurred: {0}", ex.Message);
+            Environment.Exit(1);
         }
-
-        if (mamlOutput != null)
+        finally
         {
-            Console.WriteLine("Writing maml file to: {0}", mamlOutput);
-            await reflector.WriteMamlFile(mamlOutput);
+            Console.WriteLine("Done.");
         }
     }
 }
