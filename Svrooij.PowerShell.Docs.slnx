@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/.github/" />
+  <Folder Name="/.github/workflows/">
+    <File Path=".github/workflows/build.yml" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/Svrooij.PowerShell.Docs/Svrooij.PowerShell.Docs.csproj" />
+  </Folder>
+</Solution>
