@@ -8,9 +8,9 @@ namespace Svrooij.PowerShell.Docs.Models;
 
 public class CommandParameter
 {
-    public string Name { get; set; }
+    public required string Name { get; set; }
     public string? Description { get; set; }
-    public string Type { get; set; }
+    public required string Type { get; set; }
     public string? ParameterSetName { get; set; }
     public int? Position { get; set; }
     public bool Mandatory { get; set; }
