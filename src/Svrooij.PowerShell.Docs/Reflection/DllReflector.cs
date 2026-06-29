@@ -1,7 +1,7 @@
 ﻿using Svrooij.PowerShell.Docs.Models;
 using System.Xml;
 
-namespace Svrooij.PowerShell.Docs
+namespace Svrooij.PowerShell.Docs.Reflection
 {
     internal class DllReflector
     {
@@ -15,8 +15,9 @@ namespace Svrooij.PowerShell.Docs
 
         private void LoadCommandsFromDllPath(string dllPath)
         {
-            // Load the assembly
-            var assembly = System.Reflection.Assembly.LoadFrom(dllPath);
+            // Load the assembly through a context that resolves dependencies from the dll's directory
+            var loadContext = new PluginAssemblyLoadContext(Path.GetFullPath(dllPath));
+            var assembly = loadContext.LoadFromAssemblyPath(Path.GetFullPath(dllPath));
 
             // Get all types that are a subclass of Cmdlet
             var cmdletTypes = assembly.GetTypes().Where(t => t.IsSubclassOf(typeof(System.Management.Automation.Cmdlet)) && t.IsPublic && !t.IsAbstract).ToList();

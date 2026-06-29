@@ -45,7 +45,7 @@ internal class PsRootCommand
         {
 
 
-            var reflector = new DllReflector(dllPath);
+            var reflector = new Reflection.DllReflector(dllPath);
             Console.WriteLine("Assemply loaded and parsed");
 
             if (useXmlDocs)
@@ -69,7 +69,7 @@ internal class PsRootCommand
         }
         catch (Exception ex)
         {
-            Console.Error.WriteLine("An error occurred: {0}", ex.Message);
+            Console.Error.WriteLine("pwsh-docs unexpected error: {0}", ex.Message);
             Environment.Exit(1);
         }
         finally

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Svrooij.PowerShell.Docs.Maml;
 
-
+#pragma warning disable CS8603,CS8618, CS8981
 // NOTE: Generated code may require at least .NET Framework 4.5 or .NET Core/Standard 2.0.
 /// <remarks/>
 [System.SerializableAttribute()]
